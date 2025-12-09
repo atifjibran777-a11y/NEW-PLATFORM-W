@@ -1,0 +1,146 @@
+:root {
+    --primary: #4e54c8;
+    --secondary: #8f94fb;
+    --bg-light: #f4f7f6;
+    --dark: #1f1f1f;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: var(--bg-light);
+    overflow-x: hidden;
+}
+
+/* Urdu Font Logic */
+html[lang="ur"] body {
+    font-family: 'Noto Nastaliq Urdu', serif;
+}
+html[lang="ur"] .navbar-brand {
+    font-family: 'Poppins', sans-serif; /* Keep Brand English */
+}
+
+/* Gradients */
+.bg-gradient-purple {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+.bg-gradient-green {
+    background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+}
+
+/* Card Styling */
+.card {
+    border-radius: 15px;
+}
+.view-section {
+    animation: fadeIn 0.4s ease-in-out;
+}
+
+/* Feature Cards Grid */
+.feature-card {
+    background: white;
+    padding: 20px 10px;
+    border-radius: 16px;
+    text-align: center;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    transition: transform 0.2s, box-shadow 0.2s;
+    cursor: pointer;
+    border: 1px solid #eee;
+    height: 100%;
+}
+.feature-card:active {
+    transform: scale(0.95);
+}
+.icon-circle {
+    width: 50px;
+    height: 50px;
+    line-height: 50px;
+    border-radius: 50%;
+    margin: 0 auto 10px;
+    font-size: 20px;
+}
+.bg-primary-light { background: #e3e6ff; }
+.bg-danger-light { background: #ffe3e3; }
+.bg-info-light { background: #e3f8ff; }
+.bg-warning-light { background: #fff8e1; }
+.bg-success-light { background: #e3ffe8; }
+.bg-dark-light { background: #e0e0e0; }
+
+/* Ad Modal */
+.modal-overlay {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.85);
+    z-index: 9999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.modal-content-custom {
+    width: 90%;
+    max-width: 400px;
+}
+
+/* Spin Wheel */
+.wheel-container {
+    position: relative;
+    width: 300px;
+    height: 300px;
+    margin: 0 auto;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 5px solid #fff;
+    box-shadow: 0 0 20px rgba(0,0,0,0.2);
+}
+.wheel {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    transition: transform 4s cubic-bezier(0.17, 0.67, 0.83, 0.67);
+}
+.segment {
+    position: absolute;
+    width: 50%; height: 50%;
+    background: var(--clr);
+    transform-origin: bottom right;
+    transform: rotate(calc(45deg * var(--i)));
+    clip-path: polygon(0 0, 56% 0, 100% 100%, 0 56%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.segment span {
+    position: absolute;
+    transform: rotate(45deg);
+    margin-top: 50px;
+    margin-left: 50px;
+    color: white;
+    font-weight: bold;
+    font-size: 14px;
+}
+.stopper {
+    position: absolute;
+    top: -10px; left: 50%;
+    transform: translateX(-50%);
+    width: 20px; height: 30px;
+    background: #333;
+    z-index: 2;
+    clip-path: polygon(100% 0, 50% 100%, 0 0);
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+.mining-active {
+    animation: pulse 1s infinite;
+    color: #28a745 !important;
+}
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+}
+
+/* Utils */
+.pointer { cursor: pointer; }
+.hover-effect:hover { background-color: #f8f9fa; }
