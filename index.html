@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="ur" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PakReward - Earn Real Cash</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <!-- Google Fonts (Urdu & English) -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@400;700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-light">
+
+    <!-- Header / Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary sticky-top shadow-sm">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="#" onclick="navigate('dashboard')">
+                <i class="fas fa-wallet"></i> PakReward
+            </a>
+            
+            <div class="d-flex align-items-center gap-2">
+                <div id="user-balance-display" class="d-none badge bg-warning text-dark p-2 rounded-pill">
+                    <i class="fas fa-coins"></i> <span id="nav-coins">0</span>
+                </div>
+                <button class="btn btn-sm btn-outline-light" onclick="toggleLanguage()">
+                    <span id="lang-btn-text">English</span>
+                </button>
+                <button id="logout-btn" class="d-none btn btn-sm btn-danger" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content Area -->
+    <div class="container mt-4 mb-5 pb-5">
+        
+        <!-- ALERT BOX -->
+        <div id="alert-box" class="alert d-none" role="alert"></div>
+
+        <!-- AUTH VIEW: LOGIN / REGISTER -->
+        <section id="auth-view" class="view-section">
+            <div class="row justify-content-center">
+                <div class="col-md-6 col-lg-4">
+                    <div class="card shadow-lg border-0">
+                        <div class="card-body p-4">
+                            <h3 class="text-center mb-4" data-trn="login_title">Login / Register</h3>
+                            
+                            <!-- Tabs -->
+                            <ul class="nav nav-tabs nav-fill mb-3">
+                                <li class="nav-item">
+                                    <a class="nav-link active" onclick="switchAuthTab('login')" href="#">Login</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" onclick="switchAuthTab('register')" href="#">Register</a>
+                                </li>
+                            </ul>
+
+                            <!-- Login Form -->
+                            <form id="login-form" onsubmit="handleLogin(event)">
+                                <div class="mb-3">
+                                    <input type="email" class="form-control" id="login-email" placeholder="Email" required>
+                                </div>
+                                <div class="mb-3">
+                                    <input type="password" class="form-control" id="login-pass" placeholder="Password" required>
+                                </div>
+                                <div class="d-grid">
+                                    <button type="submit" class="btn btn-primary" data-trn="login_btn">Login</button>
+                                </div>
+                                <div class="text-center mt-2">
+                                    <small class="text-muted pointer" onclick="forgotPassword()">Forgot Password?</small>
+                                </div>
+                            </form>
+
+                            <!-- Register Form -->
+                            <form id="register-form" class="d-none" onsubmit="handleRegister(event)">
+                                <div class="mb-3">
+                                    <input type="email" class="form-control" id="reg-email" placeholder="Email" required>
+                                </div>
+                                <div class="mb-3">
+                                    <input type="password" class="form-control" id="reg-pass" placeholder="Password" required>
+                                </div>
+                                <div class="mb-3">
+                                    <input type="text" class="form-control" id="reg-ref" placeholder="Referral Code (Optional)">
+                                </div>
+                                <div class="d-grid">
+                                    <button type="submit" class="btn btn-success" data-trn="register_btn">Register</button>
+                                </div>
+                            </form>
+
+                            <!-- Verify Form -->
+                            <div id="verify-form" class="d-none text-center">
+                                <h5 data-trn="verify_email">Verify Email</h5>
+                                <p class="small text-muted">Code sent to console (simulation)</p>
+                                <input type="text" id="verify-code-input" class="form-control mb-3 text-center" placeholder="123456">
+                                <button class="btn btn-primary w-100" onclick="handleVerify()">Verify</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- DASHBOARD VIEW -->
+        <section id="dashboard-view" class="view-section d-none">
+            <!-- Stats -->
+            <div class="row g-3 mb-4">
+                <div class="col-6">
+                    <div class="card bg-gradient-purple text-white h-100 text-center p-3 border-0 shadow">
+                        <small data-trn="balance">Total Balance</small>
+                        <h3 class="fw-bold"><span id="dash-pkr">0.00</span> PKR</h3>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="card bg-gradient-green text-white h-100 text-center p-3 border-0 shadow">
+                        <small data-trn="coins">Total Coins</small>
+                        <h3 class="fw-bold" id="dash-coins">0</h3>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Daily Reward -->
+            <div class="card mb-4 border-0 shadow-sm" onclick="claimDailyReward()">
+                <div class="card-body d-flex justify-content-between align-items-center cursor-pointer hover-effect">
+                    <div>
+                        <h5 class="m-0"><i class="fas fa-calendar-check text-warning"></i> <span data-trn="daily_reward">Daily Reward</span></h5>
+                        <small class="text-muted" id="daily-timer">Click to claim</small>
+                    </div>
+                    <i class="fas fa-chevron-right text-muted"></i>
+                </div>
+            </div>
+
+            <!-- Games Grid -->
+            <h5 class="mb-3 fw-bold" data-trn="games_tasks">Games & Tasks</h5>
+            <div class="row g-3">
+                <div class="col-6 col-md-4">
+                    <div class="feature-card" onclick="navigate('plinko')">
+                        <div class="icon-circle bg-primary-light text-primary"><i class="fas fa-circle-notch"></i></div>
+                        <span data-trn="plinko">Plinko</span>
+                    </div>
+                </div>
+                <div class="col-6 col-md-4">
+                    <div class="feature-card" onclick="navigate('spin')">
+                        <div class="icon-circle bg-danger-light text-danger"><i class="fas fa-dharmachakra"></i></div>
+                        <span data-trn="spin">Spin Wheel</span>
+                    </div>
+                </div>
+                <div class="col-6 col-md-4">
+                    <div class="feature-card" onclick="navigate('quiz')">
+                        <div class="icon-circle bg-info-light text-info"><i class="fas fa-question"></i></div>
+                        <span data-trn="quiz">Quiz</span>
+                    </div>
+                </div>
+                <div class="col-6 col-md-4">
+                    <div class="feature-card" onclick="navigate('mining')">
+                        <div class="icon-circle bg-warning-light text-warning"><i class="fas fa-hammer"></i></div>
+                        <span data-trn="mining">Mining</span>
+                    </div>
+                </div>
+                <div class="col-6 col-md-4">
+                    <div class="feature-card" onclick="navigate('scratch')">
+                        <div class="icon-circle bg-success-light text-success"><i class="fas fa-ticket-alt"></i></div>
+                        <span data-trn="scratch">Scratch</span>
+                    </div>
+                </div>
+                <div class="col-6 col-md-4">
+                    <div class="feature-card" onclick="navigate('wallet')">
+                        <div class="icon-circle bg-dark-light text-dark"><i class="fas fa-university"></i></div>
+                        <span data-trn="withdraw">Withdraw</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card mt-4 p-3 border-0 shadow-sm text-center">
+                 <h6 data-trn="refer_earn">Refer & Earn</h6>
+                 <p class="small text-muted">Code: <b id="my-ref-code" class="text-primary">---</b></p>
+                 <button class="btn btn-sm btn-outline-primary" onclick="copyRef()">Copy Code</button>
+            </div>
+        </section>
+
+        <!-- PLINKO VIEW -->
+        <section id="plinko-view" class="view-section d-none text-center">
+            <h3 class="mb-3">Plinko</h3>
+            <canvas id="plinkoCanvas" width="320" height="400" class="bg-dark rounded shadow mb-3"></canvas>
+            <div>
+                <button class="btn btn-lg btn-success w-75" onclick="playPlinko()">Drop Ball (-100 Coins)</button>
+            </div>
+            <button class="btn btn-link mt-3" onclick="navigate('dashboard')">Back</button>
+        </section>
+
+        <!-- SPIN VIEW -->
+        <section id="spin-view" class="view-section d-none text-center">
+            <h3>Spin & Win</h3>
+            <div class="wheel-container my-4">
+                <div class="wheel" id="wheel">
+                    <div class="segment" style="--i:1; --clr:#f44336;"><span>100</span></div>
+                    <div class="segment" style="--i:2; --clr:#9c27b0;"><span>200</span></div>
+                    <div class="segment" style="--i:3; --clr:#2196f3;"><span>300</span></div>
+                    <div class="segment" style="--i:4; --clr:#4caf50;"><span>500</span></div>
+                    <div class="segment" style="--i:5; --clr:#ffeb3b;"><span>50</span></div>
+                    <div class="segment" style="--i:6; --clr:#ff9800;"><span>0</span></div>
+                    <div class="segment" style="--i:7; --clr:#795548;"><span>1000</span></div>
+                    <div class="segment" style="--i:8; --clr:#607d8b;"><span>50</span></div>
+                </div>
+                <div class="stopper"></div>
+            </div>
+            <button class="btn btn-primary btn-lg px-5" id="spin-btn" onclick="spinWheel()">SPIN</button>
+            <p class="mt-2 text-muted">Daily Left: <span id="spin-left">4</span></p>
+            <button class="btn btn-link" onclick="navigate('dashboard')">Back</button>
+        </section>
+
+        <!-- QUIZ VIEW -->
+        <section id="quiz-view" class="view-section d-none">
+            <h3 class="text-center mb-4">Daily Quiz</h3>
+            <div id="quiz-container" class="card p-4 shadow-sm border-0">
+                <h5 id="quiz-question" class="mb-4 fw-bold">Question text here?</h5>
+                <div class="d-grid gap-2" id="quiz-options">
+                    <!-- Options injected via JS -->
+                </div>
+            </div>
+            <p class="text-center mt-3 text-muted" id="quiz-status"></p>
+            <div class="text-center">
+                <button class="btn btn-link" onclick="navigate('dashboard')">Exit</button>
+            </div>
+        </section>
+
+        <!-- MINING VIEW -->
+        <section id="mining-view" class="view-section d-none text-center">
+            <h3>Cloud Mining</h3>
+            <div class="mining-animation my-5">
+                <i class="fas fa-server fa-5x text-secondary" id="mining-icon"></i>
+            </div>
+            <h4 id="mining-timer">00:00:00</h4>
+            <p class="text-muted">Rate: 50 Coins/Hour</p>
+            <button id="mining-btn" class="btn btn-lg btn-warning w-75" onclick="toggleMining()">Start Mining</button>
+            <br>
+            <button class="btn btn-link mt-3" onclick="navigate('dashboard')">Back</button>
+        </section>
+
+        <!-- WALLET VIEW -->
+        <section id="wallet-view" class="view-section d-none">
+            <h3 class="mb-4">Wallet</h3>
+            <div class="card bg-dark text-white p-4 mb-4 rounded-3">
+                <div class="d-flex justify-content-between">
+                    <span>Current Balance</span>
+                    <span class="badge bg-light text-dark">50k Coins = 1 PKR</span>
+                </div>
+                <h1 class="mt-2"><span id="wallet-coins">0</span> <small class="fs-6">Coins</small></h1>
+                <h4 class="text-success">≈ <span id="wallet-pkr">0.00</span> PKR</h4>
+            </div>
+
+            <form onsubmit="handleWithdraw(event)">
+                <div class="mb-3">
+                    <label class="form-label">Method</label>
+                    <select class="form-select" id="withdraw-method">
+                        <option value="easypaisa">EasyPaisa</option>
+                        <option value="jazzcash">JazzCash</option>
+                        <option value="bank">Bank Transfer</option>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Account Number</label>
+                    <input type="number" class="form-control" required placeholder="0300...">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Amount (PKR)</label>
+                    <input type="number" id="withdraw-amount" class="form-control" required min="500" placeholder="Min 500 PKR">
+                </div>
+                <button type="submit" class="btn btn-success w-100 py-2">Withdraw Now</button>
+            </form>
+            <button class="btn btn-link w-100 mt-3" onclick="navigate('dashboard')">Back</button>
+        </section>
+
+    </div>
+
+    <!-- AD OVERLAY MODAL -->
+    <div id="ad-modal" class="modal-overlay d-none">
+        <div class="modal-content-custom bg-white p-4 rounded text-center shadow-lg">
+            <h4><i class="fas fa-ad text-warning"></i> Advertisement</h4>
+            <div class="ad-placeholder bg-light my-3 border rounded d-flex align-items-center justify-content-center" style="height:200px">
+                <p class="text-muted">Ad Simulation<br>(Google AdSense / AdMob)</p>
+            </div>
+            <button id="close-ad-btn" class="btn btn-secondary w-100" disabled>Close in <span id="ad-timer">5</span>s</button>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
